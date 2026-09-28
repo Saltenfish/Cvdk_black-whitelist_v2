@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Markdown — CaveDuck 白名單</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+/* 最上方：HTML 與 Markdown 的差異（非卡片） */
+.intro{max-width:1500px;margin:0 auto;padding:1rem 1.2rem .4rem}
+.intro h2{font-size:15px;margin-bottom:.5rem;padding-left:.6rem;border-left:4px solid var(--accent-6)}
+.cmp{width:100%;border-collapse:collapse;font-size:13.5px;margin-bottom:.8rem;table-layout:fixed}
+.cmp th,.cmp td{overflow-wrap:anywhere}
+.cmp th:first-child,.cmp td:first-child{width:5.5em}
+.cmp th,.cmp td{border-bottom:1px solid var(--card-border);padding:.45rem .6rem;text-align:left;vertical-align:top}
+.cmp thead th{color:var(--text-3);font-weight:600;font-size:12.5px}
+.cmp td:first-child{color:var(--text-2)}
+.cmp .y{color:var(--ok);font-weight:700}.cmp .n{color:var(--no);font-weight:700}
+.cmp code,.rules code{font-family:ui-monospace,monospace;font-size:12px;background:var(--code-bg);border-radius:4px;padding:0 4px}
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:.4rem 1.2rem;font-size:13.5px;color:var(--text-2);padding-bottom:.4rem}
+.rules b{color:var(--text)}
+@media (max-width:700px){.rules{grid-template-columns:1fr}.cmp{font-size:12.5px}}
+
+/* 卡片 */
+.card.md{}
+.card.md:target{box-shadow:0 0 0 2px var(--accent-6)}
+.card.md .name{font-family:inherit}
+.vf{flex:none;font-size:12px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;cursor:help;border:1px solid var(--card-border)}
+.vf.yes{color:var(--ok);border-color:var(--ok-bd)}.vf.part{color:var(--ok);border-style:dashed}.vf.no{color:var(--text-3);border-style:dashed}
+.card.md .code{color:var(--text);font-size:12.5px;max-height:5.2em;white-space:pre-wrap}
+.mdprev{background:var(--bg-3);border:1px dashed var(--card-border);border-radius:8px;padding:.5rem .65rem;font-size:14px;line-height:1.5;overflow:auto;max-height:9em;color:var(--text-3)}
+.mdprev h1{font-size:1.45em;margin:.1em 0 .3em}.mdprev h2{font-size:1.2em;margin:.1em 0 .3em}.mdprev h3{font-size:1.05em;margin:.1em 0}
+.mdprev ul,.mdprev ol{padding-left:1.4em;margin:0}.mdprev ul.hl,.mdprev ol.hl{padding-left:1.6em}
+.mdprev table{border-collapse:collapse}.mdprev th,.mdprev td{border:1px solid currentColor;padding:1px 10px}
+.mdprev pre{margin:0;padding:.3em .5em;font-family:ui-monospace,monospace}
+.mdprev code{font-family:ui-monospace,monospace}
+.mdprev .img-demo{display:inline-block;padding:.4em .9em}
+.mdprev .br{font-size:.85em;padding:0 3px;margin-left:2px}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">📝</span> Markdown</h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋語法，例如「表格」「粗體」「#」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+</div>
+
+<div class="intro">
+  <h2>HTML 和 Markdown 有什麼不一樣？</h2>
+  <table class="cmp">
+    <thead><tr><th></th><th>直接寫 HTML 標籤</th><th>用 Markdown 符號</th></tr></thead>
+    <tbody>
+      <tr><td>寫法</td><td><code>&lt;h1&gt;標題&lt;/h1&gt;</code></td><td><code># 標題</code></td></tr>
+    </tbody>
+  </table>
+  <div class="rules">
+    <div><b>① HTML 和 Markdown 之間要空一行。</b>HTML 標籤後面緊接著寫 Markdown，Markdown 不會轉換。</div>
+    <div><b>② 標籤裡面的 Markdown 不會轉換。</b><code>&lt;div&gt;**粗體**&lt;/div&gt;</code> 會原樣顯示星號，要粗體請直接用 <code>&lt;b&gt;</code>。</div>
+  </div>
+  <div class="count" id="legend" style="white-space:normal;line-height:1.8"></div>
+</div>
+
+<main class="main" id="main" style="padding-top:.4rem"><div class="empty">載入中…</div></main>
+
+<script src="data/markdown.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+document.getElementById('legend').innerHTML = CD.legend(['both', 'creator', 'none']) + _t('<span style="margin-left:1rem;white-space:normal">右上角 ✓ 已實測　◌ 依平台程式推定（滑鼠移上去看細節）</span>');
+CD.loadJSON('data/markdown.json').then(function (d) {
+  var html = '', sections = [];
+  d.groups.forEach(function (g) {
+    var list = d.items.filter(function (i) { return i.group === g.id; });
+    if (!list.length) return;
+    var isNone = g.id === 'none';
+    var c = isNone ? 'var(--no)' : 'var(--accent-' + g.accent + ')';
+    sections.push({ id: g.id, name: g.name, count: list.length, accent: isNone ? 0 : g.accent, color: isNone ? 'var(--no)' : null });
+    html += '<section class="cat" id="cat-' + g.id + '" style="--c:' + c + '"><h2>' + CD.esc(g.name) + '<span class="n">' + list.length + '</span></h2><div class="grid">';
+    list.forEach(function (it) {
+      var vf = it.verified === 'yes' ? '✓' : it.verified === 'part' ? '✓' : '◌';
+      html += '<div class="card md" id="md-' + it.id + '" data-status="' + it.status + '" data-search="' + CD.esc(it.name + ' ' + it.desc + ' ' + it.src) + '">'
+        + '<div class="head"><div class="name">' + CD.esc(it.name) + '</div>' + CD.statusBadge(it.status) + '<span class="vf ' + it.verified + '" title="' + CD.esc(it.note) + '">' + vf + '</span></div>'
+        + '<div class="desc">' + CD.esc(it.desc) + '</div>'
+        + CD.codeBlock(it.src, { any: it.key })
+        + '<div class="mdprev">' + it.html + '</div>'
+        + '</div>';
+    });
+    html += '</div></section>';
+  });
+  html += _t('<div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+  CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+  if (location.hash) { var t = document.querySelector(location.hash); if (t) setTimeout(function () { t.scrollIntoView({ block: 'start' }); }, 50); }
+});
+</script>
+</body>
+</html>

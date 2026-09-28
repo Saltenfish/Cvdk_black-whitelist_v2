@@ -1,0 +1,438 @@
+/* ═══════════════════════════════════════════════════════════
+   CaveDuck 白名單查詢 v2 — 共用樣式
+   規則：所有顏色只准用變數；[data-theme="light"] 覆寫同名變數。
+   ═══════════════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0f1115;--bg-2:#151820;--bg-3:#1b1f28;
+  --card:#171a21;--card-border:#262b36;--card-hover:#3a4150;
+  --code-bg:#0b0d11;--code-text:#d6dbe4;--code-tag:#7cc4ff;--code-attr:#f7a3c6;--code-val:#b8f28a;
+  --text:#e8eaef;--text-2:#a9b0bd;--text-3:#6f7786;
+  --ok:#4fd48a;--ok-bg:#0f2a1c;--ok-bd:#1f5a38;
+  --chat:#f2c65a;--chat-bg:#2b230b;--chat-bd:#5c4a14;
+  --creator:#5fb2ff;--creator-bg:#0d2136;--creator-bd:#1c4a78;
+  --no:#ff6b6b;--no-bg:#2c1414;--no-bd:#5c2323;
+  --info:#5ad4cc;--info-bg:#0d2827;--info-bd:#1a5450;
+  --accent-1:#c58cff;--accent-1-bg:#241738;
+  --accent-2:#5fd3c8;--accent-2-bg:#0f2d2b;
+  --accent-3:#ffa657;--accent-3-bg:#33210e;
+  --accent-4:#67d98a;--accent-4-bg:#10301b;
+  --accent-5:#ff7b8c;--accent-5-bg:#331419;
+  --accent-6:#7aa5ff;--accent-6-bg:#141f3a;
+  --accent-7:#e6d55a;--accent-7-bg:#2f2b0f;
+  --accent-8:#ff8fd0;--accent-8-bg:#33162a;
+  --unv:#b39ddb;--badge-fg:#0f1115;--k:#ffd479;--k-bg:rgba(255,212,121,.14);
+  --shadow:0 6px 24px rgba(0,0,0,.45);
+  --mark:#5a4a00;
+  --toggle-icon:"☀️";--toggle-text:"亮色";
+}
+[data-theme="light"]{
+  --bg:#f6f6f3;--bg-2:#ffffff;--bg-3:#eeeee9;
+  --card:#ffffff;--card-border:#dcdcd5;--card-hover:#a9a9a0;
+  --code-bg:#f1f1ec;--code-text:#23262d;--code-tag:#0b63c7;--code-attr:#b8265c;--code-val:#2a7a1e;
+  --text:#1f2126;--text-2:#555b66;--text-3:#8a9099;
+  --ok:#1e7a47;--ok-bg:#e4f5ea;--ok-bd:#a9dcbd;
+  --chat:#9a6b00;--chat-bg:#fdf3d6;--chat-bd:#e6cf86;
+  --creator:#1b64b5;--creator-bg:#e5effb;--creator-bd:#a9c8ec;
+  --no:#c0392b;--no-bg:#fbe8e6;--no-bd:#f0b3ad;
+  --info:#157f79;--info-bg:#e2f4f2;--info-bd:#9dd6d1;
+  --accent-1:#6f3fb8;--accent-1-bg:#f0e8fb;
+  --accent-2:#177f76;--accent-2-bg:#e0f4f1;
+  --accent-3:#b85b00;--accent-3-bg:#fdecdc;
+  --accent-4:#1f7d3d;--accent-4-bg:#e2f5e7;
+  --accent-5:#c22f45;--accent-5-bg:#fde6ea;
+  --accent-6:#2a55b8;--accent-6-bg:#e6ecfb;
+  --accent-7:#8a7a00;--accent-7-bg:#f8f4d4;
+  --accent-8:#b8317f;--accent-8-bg:#fbe4f1;
+  --unv:#6a4fa3;--badge-fg:#ffffff;--k:#9a3b00;--k-bg:#ffe8b8;
+  --shadow:0 6px 20px rgba(20,20,20,.10);
+  --mark:#fff0a0;
+  --toggle-icon:"🌙";--toggle-text:"暗色";
+}
+
+html{scroll-behavior:smooth}
+html,body{background:var(--bg);color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased}
+code,pre,.mono{font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,Consolas,monospace}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;font-size:inherit;color:inherit;cursor:pointer}
+mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:4px}
+.hidden{display:none!important}
+
+/* ── 頂欄 ── */
+.top{position:sticky;top:0;z-index:30;background:var(--bg-2);border-bottom:1px solid var(--card-border);
+  display:flex;align-items:center;gap:.8rem;padding:.6rem 1.2rem;flex-wrap:wrap}
+.top .back{font-size:13px;color:var(--text-2);border:1px solid var(--card-border);border-radius:8px;padding:4px 10px;background:var(--bg-3)}
+.top .back:hover{color:var(--text);border-color:var(--card-hover)}
+.top h1{font-size:17px;font-weight:700;display:flex;align-items:center;gap:.5rem;flex:1;min-width:0}
+.top h1 .ico{font-size:20px}
+.theme-btn{border:1px solid var(--card-border);background:var(--bg-3);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--text-2);display:flex;align-items:center;gap:6px}
+.theme-btn::before{content:var(--toggle-icon)}
+.theme-btn::after{content:var(--toggle-text)}
+.theme-btn:hover{color:var(--text);border-color:var(--card-hover)}
+/* 語言切換鈕（app.js 自動加在主題鈕左邊） */
+.lang-sw{display:flex;border:1px solid var(--card-border);background:var(--bg-3);border-radius:999px;padding:2px;font-size:13px;line-height:1.4}
+.lang-sw a{padding:3px 10px;border-radius:999px;color:var(--text-2);white-space:nowrap}
+.lang-sw a[href]:hover{color:var(--text)}
+.lang-sw a.on{background:var(--card);color:var(--text);font-weight:700;box-shadow:0 0 0 1px var(--card-border)}
+/* 其他語言版的 CSS 文字 */
+html[lang="en"]{--toggle-text:"Light"}
+html[lang="en"][data-theme="light"]{--toggle-text:"Dark"}
+html[lang="en"] .card .when::before{content:"When to use: "}
+html[lang="ko"]{--toggle-text:"라이트"}
+html[lang="ko"][data-theme="light"]{--toggle-text:"다크"}
+html[lang="ko"] .card .when::before{content:"언제 쓰나요: "}
+html[lang="ja"]{--toggle-text:"ライト"}
+html[lang="ja"][data-theme="light"]{--toggle-text:"ダーク"}
+html[lang="ja"] .card .when::before{content:"使う場面："}
+html[lang="ja"],html[lang="ja"] body{font-family:system-ui,-apple-system,"Segoe UI","Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic UI","Meiryo","Noto Sans JP",sans-serif;line-break:strict}
+html[lang="ko"],html[lang="ko"] body{font-family:system-ui,-apple-system,"Segoe UI","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;word-break:keep-all}
+
+/* ── 工具列 ── */
+.tools{position:sticky;top:49px;z-index:25;background:var(--bg-2);border-bottom:1px solid var(--card-border);padding:.55rem 1.2rem;display:flex;flex-direction:column;gap:.45rem}
+.tools .row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tools .lbl{font-size:12px;color:var(--text-3);letter-spacing:.06em;white-space:nowrap;min-width:2.6em}
+.search{flex:1;min-width:200px;max-width:420px;display:flex;align-items:center;gap:6px;background:var(--bg-3);border:1px solid var(--card-border);border-radius:10px;padding:5px 10px}
+.search input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:14px;font-family:inherit;min-width:0}
+.search input::placeholder{color:var(--text-3)}
+.search:focus-within{border-color:var(--card-hover)}
+.count{font-size:12px;color:var(--text-3);white-space:nowrap}
+
+/* 分類鈕（跳轉） */
+.catnav{display:flex;flex-wrap:wrap;gap:6px}
+.cat-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--card-border);background:var(--bg-3);
+  border-radius:999px;padding:3px 10px 3px 8px;font-size:13px;color:var(--text-2);transition:all .15s}
+.cat-btn .dot{width:8px;height:8px;border-radius:50%;background:var(--c,var(--text-3))}
+.cat-btn .n{font-size:11px;color:var(--text-3)}
+.cat-btn:hover{border-color:var(--c,var(--card-hover));color:var(--text)}
+.cat-btn.on{background:var(--cbg,var(--card));border-color:var(--c,var(--card-hover));color:var(--c,var(--text));font-weight:600}
+.cat-btn.on .n{color:inherit;opacity:.75}
+
+/* 狀態鈕（篩選） */
+.seg{display:inline-flex;border:1px solid var(--card-border);border-radius:9px;overflow:hidden;background:var(--bg-3)}
+.seg button{border:none;background:transparent;padding:4px 12px;font-size:13px;color:var(--text-2);border-right:1px solid var(--card-border);display:flex;align-items:center;gap:5px}
+.seg button:last-child{border-right:none}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--card);color:var(--text);font-weight:600}
+.seg .sw{width:9px;height:9px;border-radius:2px}
+.sw.unverified{background:transparent;border:1.5px dashed var(--unv)}
+.sw.both,.dot.both{background:var(--ok)}.sw.chat,.dot.chat{background:var(--chat)}.sw.creator,.dot.creator{background:var(--creator)}.sw.none,.dot.none{background:var(--no)}
+
+/* ── 說明列 ── */
+.note{padding:.6rem 1.2rem;background:var(--bg);border-bottom:1px solid var(--card-border);color:var(--text-2);font-size:13px;display:flex;gap:.6rem 1.2rem;flex-wrap:wrap;align-items:center}
+.note strong{color:var(--text)}
+.legend{display:inline-flex;gap:.7rem;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:5px;font-size:12px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* ── 內容 ── */
+.main{padding:1rem 1.2rem 4rem;max-width:1500px;margin:0 auto}
+section.cat{margin-bottom:2rem;scroll-margin-top:150px}
+section.cat>h2{font-size:15px;font-weight:700;display:flex;align-items:center;gap:.6rem;margin-bottom:.7rem;padding-left:.6rem;border-left:4px solid var(--c,var(--text-3))}
+section.cat>h2 .n{font-size:12px;font-weight:400;color:var(--text-3)}
+section.cat>h2 .sub{font-size:12px;font-weight:400;color:var(--text-3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(270px,100%),1fr));gap:.7rem}
+.grid>*{min-width:0}
+.preview{max-width:100%}
+.empty{color:var(--text-3);padding:2rem;text-align:center}
+.err{color:var(--no);background:var(--no-bg);border:1px solid var(--no-bd);border-radius:10px;padding:1rem;margin:1rem 0}
+
+/* 卡片 */
+.card{background:var(--card);border:1px solid var(--card-border);border-left:4px solid var(--st,var(--card-border));border-radius:10px;padding:.7rem .85rem;display:flex;flex-direction:column;gap:.45rem;transition:border-color .15s}
+.card:hover{border-color:var(--card-hover);border-left-color:var(--st,var(--card-hover))}
+.card[data-status="both"]{--st:var(--ok)}.card[data-status="chat"]{--st:var(--chat)}.card[data-status="creator"]{--st:var(--creator)}.card[data-status="none"]{--st:var(--no)}
+.card[data-status="allow"]{--st:var(--ok)}.card[data-status="filter"]{--st:var(--info)}
+.card[data-status="unverified"]{--st:var(--unv);border-left-style:dashed}
+/* 只有一邊能用的卡片：整張淡淡染色，和「兩邊都能用」拉開差距 */
+.card[data-status]{border-left-width:6px}
+
+/* 實心狀態徽章 */
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:12px;font-weight:700;padding:1px 9px;border-radius:999px;white-space:nowrap;line-height:1.6;color:var(--badge-fg)}
+.badge.both{background:var(--ok)}.badge.chat{background:var(--chat)}.badge.creator{background:var(--creator)}.badge.none{background:var(--no)}
+.badge.unverified{background:transparent;color:var(--unv);border:1.5px dashed var(--unv);padding:0 8px}
+
+/* 分類內依狀態分段 */
+.stgroup{margin-bottom:1.1rem}
+.sthead{display:flex;align-items:center;gap:.6rem;margin:.2rem 0 .55rem;font-size:13px;font-weight:600}
+.sthead::after{content:"";flex:1;height:2px;border-radius:2px;background:var(--line,var(--card-border));opacity:.55}
+.sthead.both{--line:var(--ok)}.sthead.chat{--line:var(--chat)}.sthead.creator{--line:var(--creator)}.sthead.unverified{--line:var(--unv)}
+.sthead .n{font-size:12px;font-weight:400;color:var(--text-3)}
+.card .head{display:flex;align-items:flex-start;gap:.5rem;flex-wrap:wrap}
+.card .name{font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;font-size:14px;font-weight:700;flex:1;min-width:0;word-break:break-all}
+.card .name .zh{font-family:system-ui,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;font-weight:600;color:var(--text-2);font-size:13px;margin-left:.4rem}
+.card .desc{font-size:13.5px;color:var(--text);line-height:1.55}
+.card .when{font-size:12.5px;color:var(--text-2)}
+.card .when::before{content:"什麼時候會用到：";color:var(--text-3)}
+.card .sub{font-size:12px;color:var(--text-3)}
+.pills{display:flex;gap:4px;flex-wrap:wrap}
+.pill{font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid;white-space:nowrap;line-height:1.5}
+.pill.both,.pill.ok{color:var(--ok);background:var(--ok-bg);border-color:var(--ok-bd)}
+.pill.chat{color:var(--chat);background:var(--chat-bg);border-color:var(--chat-bd)}
+.pill.creator{color:var(--creator);background:var(--creator-bg);border-color:var(--creator-bd)}
+.pill.none,.pill.no{color:var(--no);background:var(--no-bg);border-color:var(--no-bd)}
+.pill.info{color:var(--info);background:var(--info-bg);border-color:var(--info-bd)}
+.pill.muted{color:var(--text-2);background:var(--bg-3);border-color:var(--card-border)}
+.chips{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.chips .lbl{font-size:12px;color:var(--text-3)}
+.chip{font-family:ui-monospace,monospace;font-size:11.5px;background:var(--bg-3);border:1px solid var(--card-border);border-radius:5px;padding:0 6px;color:var(--text-2)}
+
+/* 預覽區 */
+.preview{background:var(--bg-3);border:1px dashed var(--card-border);border-radius:8px;padding:.6rem .7rem;overflow:auto;color:var(--text);font-size:14px;line-height:1.5}
+.preview.center{text-align:center}
+.preview.tinted{background:var(--cbg,var(--bg-3));border-style:solid;border-color:transparent}
+
+/* 程式碼 + 複製：單一顏色，只標出示範重點；固定小高度，可捲動 */
+.codebox{display:flex;gap:6px;align-items:flex-start}
+.code{flex:1;min-width:0;background:var(--code-bg);border:1px solid var(--card-border);border-radius:7px;padding:.35rem .6rem;
+  font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;font-size:11.5px;color:var(--text-3);
+  white-space:pre-wrap;word-break:break-all;line-height:1.5;max-height:3.9em;box-sizing:content-box;overflow-y:auto;
+  scrollbar-width:thin}
+.code .k{color:var(--k);background:var(--k-bg);font-weight:700;border-radius:3px;padding:0 2px}
+.copy{flex:none;width:30px;height:30px;display:grid;place-items:center;padding:0;border-radius:7px;border:1px solid var(--card-border);background:var(--bg-3);color:var(--text-2)}
+.copy:hover{color:var(--text);border-color:var(--card-hover)}
+.copy.ok{color:var(--ok);border-color:var(--ok-bd)}
+
+/* 不支援：只列名字 */
+.chiplist{display:flex;flex-wrap:wrap;gap:6px}
+.chiplist .chip{font-size:12.5px;padding:2px 9px;display:inline-flex;gap:6px;align-items:center;color:var(--text-2)}
+.chiplist .chip small{font-family:system-ui,sans-serif;font-size:10.5px;color:var(--text-3)}
+
+/* 展開更多 */
+.more{margin-top:.6rem;text-align:center}
+.more button{border:1px dashed var(--card-border);background:transparent;border-radius:8px;padding:5px 16px;font-size:13px;color:var(--text-2)}
+.more button:hover{color:var(--text);border-color:var(--card-hover)}
+details.rare{margin-top:.6rem}
+details.rare summary{cursor:pointer;font-size:13px;color:var(--text-3);padding:.3rem 0}
+details.rare .grid{margin-top:.5rem}
+
+@media (max-width:600px){
+  .top{padding:.5rem .8rem}.tools{padding:.5rem .8rem;top:49px}.main{padding:.8rem .8rem 3rem}.note{padding:.5rem .8rem}
+  .grid{grid-template-columns:minmax(0,1fr)}.search{max-width:none}
+}
+
+/* ── 全部都能用的頁面：卡片色條跟著分類色，不用狀態色 ── */
+.card.bycat[data-status]{--st:var(--c);background:var(--card)}
+
+/* ── 卡片裡（程式碼框、預覽框）的捲軸隱藏，但仍可捲動；網頁本身的捲軸保留 ── */
+.card,.card *,.info .tip{scrollbar-width:none}
+.card::-webkit-scrollbar,.card *::-webkit-scrollbar,.info .tip::-webkit-scrollbar{display:none;width:0;height:0}
+
+/* ── 分類跳轉時，標題停在固定工具列下面（高度由 app.js 依畫面寬度量出來） ── */
+section.cat,.subcat.tw,.card.md{scroll-margin-top:calc(var(--sticky-h,150px) + 12px)}
+
+/* ── 手機、平板：按鈕列改成單行左右滑，避免固定工具列佔掉半個畫面 ── */
+@media (max-width:768px){
+  .tools{gap:.35rem;padding:.45rem .8rem}
+  .tools .row{flex-wrap:nowrap;min-width:0}
+  .tools .lbl,.tools .count{display:none}
+  .search{max-width:none}
+  .catnav,.subnav,.seg{flex-wrap:nowrap;overflow-x:auto;max-width:100%;min-width:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .catnav::-webkit-scrollbar,.subnav::-webkit-scrollbar,.seg::-webkit-scrollbar{display:none}
+  .cat-btn,.sub-btn,.seg button{flex:none;white-space:nowrap}
+  .top h1{font-size:15px}
+  section.cat>h2{flex-wrap:wrap;row-gap:.1rem;white-space:nowrap}
+  section.cat>h2 .sub{flex-basis:100%;white-space:normal}
+  .note{font-size:12.5px}
+}
+
+/* ── 卡片名稱：用卡片的顏色＋粗體 ── */
+.card .name{color:var(--st,var(--text));font-weight:800}
+
+/* ── 分類之間用線隔開 ── */
+section.cat+section.cat{border-top:1px solid var(--card-border);padding-top:1.3rem}
+
+/* ── 預覽底色＝卡片顏色的淡底（取代整張卡染色） ── */
+.card .preview,.card .mdprev,.card .pv{background:color-mix(in srgb,var(--st,var(--text-3)) 11%,var(--card));border:1px solid color-mix(in srgb,var(--st,var(--text-3)) 28%,transparent)}
+.card .pv{border-radius:8px;padding:.35rem .5rem}
+
+/* ── 同一排卡片對齊：名稱／說明／預覽／程式碼 四列共用高度 ── */
+.grid>.card.aligned{display:grid;grid-template-rows:subgrid;grid-row:span 4;row-gap:0;align-content:start}
+.card.aligned>.slot{min-width:0;display:flex;flex-direction:column;gap:.35rem}
+.card.aligned>.slot:not(:empty):not(:last-child){margin-bottom:.5rem}
+.card.aligned>.slot.s-pv>*{flex:1}
+.card.aligned>.slot.s-code{justify-content:flex-end}
+
+/* ── 簡單預覽（CSS 屬性、Tailwind） ── */
+.pv.sp{position:relative;overflow:hidden;transform:translateZ(0);min-height:52px;max-height:96px;display:flex;align-items:center;justify-content:flex-start;font-size:13px;color:var(--text)}
+.pv.sp .pvbox{display:inline-block;padding:4px 12px;border-radius:5px;background:color-mix(in srgb,var(--st) 45%,var(--card));color:var(--text);font-size:12.5px;max-width:100%}
+.pv.sp .pvframe{position:relative;width:100%;min-height:44px;border:1px dashed color-mix(in srgb,var(--st) 50%,transparent);border-radius:5px}
+.pv.sp .pvrow{display:flex;gap:6px;width:100%;min-height:36px}
+.pv.sp .pvrow i{font-style:normal;font-size:11px;min-width:24px;padding:4px 6px;text-align:center;border-radius:4px;background:color-mix(in srgb,var(--st) 45%,var(--card))}
+.pv.sp .pvlist{margin:0;padding-left:1.4em}
+.pv.sp .pvtable td{border:1px solid color-mix(in srgb,var(--st) 55%,transparent);padding:1px 8px}
+.pv.sp .pvpara{margin:0;font-size:12px;line-height:1.5}
+
+/* ── 動畫預覽 ── */
+@keyframes cd-bounce{0%,100%{transform:translateY(0)}35%{transform:translateY(-14px)}65%{transform:translateY(-6px)}}
+@keyframes cd-fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes cd-pulse{50%{opacity:.35}}
+@keyframes cd-spin{to{transform:rotate(360deg)}}
+@keyframes cd-ping{75%,100%{transform:scale(1.8);opacity:0}}
+@keyframes cd-enter{from{opacity:var(--eo,0);transform:scale(var(--es,.5))}}
+@keyframes cd-exit{to{opacity:var(--xo,1);transform:scale(var(--xs,.5))}}
+@keyframes cd-slide{from{transform:translateX(0)}to{transform:translateX(60px);visibility:hidden}}
+.pv.mo{padding-right:30px}
+.pv .rp{position:absolute;right:5px;top:5px;width:22px;height:22px;border-radius:50%;border:1px solid var(--card-border);background:var(--card);color:var(--text-2);font-size:12px;line-height:1;display:grid;place-items:center;cursor:pointer;z-index:2;padding:0}
+.pv .rp:hover{color:var(--text);border-color:var(--card-hover)}
+.pvbox.tr{transition:transform .6s,opacity .6s,background-color .6s}
+.pvbox.tr.go{transform:translateX(70px);opacity:.45;background:var(--st)}
+.pvbox.tr.nt{transition:none !important}
+.tile .pvbox.tr.go{transform:translateX(34px)}
+
+/* ── 組合卡：同一組的寫法並排比較（先組合、後單個） ── */
+.grid.famgrid{grid-template-columns:repeat(auto-fill,minmax(min(460px,100%),1fr));margin-bottom:.8rem}
+.card.fam{gap:.5rem}
+.card.fam .head{flex-wrap:wrap}
+.card.fam .famn{font-size:12px;color:var(--text-3);font-weight:400;flex:0 1 auto;min-width:0;overflow-wrap:anywhere}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:.45rem}
+.tiles.sw{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+.tile{position:relative;border:1px solid var(--card-border);border-radius:8px;padding:.35rem .4rem .4rem;display:flex;flex-direction:column;gap:.25rem;min-width:0;background:var(--card)}
+.tile .pv.sp{min-height:44px;max-height:78px;margin:0}
+.tile .tname{font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;font-size:12px;font-weight:800;color:var(--st);word-break:break-all;padding-right:24px;line-height:1.35}
+.tile .tdesc{font-size:11.5px;color:var(--text-2);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tile .tcopy{position:absolute;right:4px;bottom:4px;width:22px;height:22px;border-radius:6px}
+.tile .tcopy svg{width:12px;height:12px}
+.tile.match{outline:2px solid var(--k);outline-offset:1px}
+.tile.more-hidden{display:none}
+.tmore{grid-column:1/-1;border:1px dashed var(--card-border);background:transparent;border-radius:7px;padding:4px;font-size:12px;color:var(--text-2)}
+.tmore:hover{color:var(--text)}
+.single-h{font-size:12px;color:var(--text-3);margin:.2rem 0 .45rem;letter-spacing:.04em}
+
+/* ── 依屬性設計的示範：被改到的那一個用卡片色，其他是淡色 ── */
+.pv.sp.demo{max-height:none;align-items:stretch;padding:.4rem}
+.dm{width:100%;font-size:11px;color:var(--text);line-height:1.4}
+.dm i,.dm .fl,.dm .zb{font-style:normal;padding:2px 7px;border-radius:4px;background:color-mix(in srgb,var(--text-3) 35%,var(--card));text-align:center}
+.dm .hi{background:var(--st);color:var(--badge-fg);border-radius:4px;padding:2px 7px;font-weight:700}
+.dm.flexc{height:66px;gap:4px;border:1px dashed var(--card-border);border-radius:5px;padding:3px}
+.dm.wrapc{height:70px;gap:3px;align-items:flex-start;border:1px dashed var(--card-border);border-radius:5px;padding:3px;overflow:hidden}
+.dm.wrapc i{flex:0 0 40%}
+.dm.childc{display:flex;align-items:flex-start;gap:4px;height:56px;border:1px dashed var(--card-border);border-radius:5px;padding:3px}
+.dm.childc.shr i{flex:0 1 60%;min-width:0}
+.dm.gridc{gap:3px;border:1px dashed var(--card-border);border-radius:5px;padding:3px}
+.dm.gridc.g3{display:grid;grid-template-columns:repeat(3,1fr)}
+.dm.flow{border:1px dashed var(--card-border);border-radius:5px;padding:4px}
+.dm.tw{width:130px;max-width:100%;border:1px dashed var(--card-border);border-radius:5px;padding:3px 5px}
+
+.dm.of{width:92px;height:46px;border:1px dashed var(--card-border);padding:0;background:var(--card)}
+.dm.va{line-height:44px;font-size:12px}
+.dm.va .vb{display:inline-block;width:14px;height:22px;padding:0}
+.dm.flt{font-size:11px}
+.tile .tcode{display:block;font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;font-size:10.5px;color:var(--text);background:var(--code-bg);border-radius:4px;padding:2px 5px;word-break:break-all;line-height:1.4;margin-right:26px}
+.tiles{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+
+/* ── 示範 v2 ── */
+.pv.sp.demo{flex-direction:column;gap:3px}
+.dmn{font-size:10px;color:var(--text-3);line-height:1.3}
+.dm .big{font-size:14px;line-height:1.2}
+.dm .dsp{gap:3px;padding:2px 3px}
+.dm .dsp b{font-weight:700;background:color-mix(in srgb,var(--badge-fg) 22%,transparent);padding:0 4px;border-radius:3px}
+.dm.childc.ord{gap:2px}.dm.childc.ord i{padding:2px 3px;min-width:14px;font-size:10px}
+.dm.tw.wide{width:160px;max-width:100%}
+.dm.tw{overflow-wrap:normal}
+.dm.ofw{display:flex;gap:6px;height:58px;align-items:flex-start;justify-content:space-between}
+.dm.ofw .ofb.long{flex:0 0 52%;height:32px}.dm.ofw .ofb.short{flex:0 0 30%;height:32px}
+.dm .ofb,.dm.ofb{flex:1;min-width:0;height:44px;border:1px solid var(--st);border-radius:4px;padding:2px 4px;white-space:nowrap;font-size:10.5px;line-height:1.35}
+.card .dm .ofb,.card .dm.ofb,.card .dm.rsz{scrollbar-width:thin;scrollbar-color:var(--st) transparent}
+.card .dm .ofb::-webkit-scrollbar,.card .dm.ofb::-webkit-scrollbar{display:block;width:6px;height:6px}
+.dm.sb1{flex:none;width:100%}
+.dm.zc{position:relative;height:50px;isolation:isolate}
+.dm.zc .zs{position:absolute;top:0;bottom:0;width:12%;border-radius:3px;background:color-mix(in srgb,var(--text-3) 70%,var(--card));color:var(--card);font-size:9px;font-weight:700;display:flex;align-items:flex-end;justify-content:center;padding-bottom:1px}
+.dm.zc .zh{position:absolute;left:2%;right:2%;top:14px;height:16px;padding:0;display:flex;align-items:center;justify-content:center;font-size:10px}
+.dm.posf{position:relative;height:58px;overflow:auto;border:1px dashed var(--card-border);border-radius:5px;padding:2px 4px;font-size:10.5px;line-height:1.5}
+.card .dm.posf{scrollbar-width:thin;scrollbar-color:var(--text-3) transparent}
+.dm.posf .pz{width:fit-content;padding:0 6px}
+.dm.para{width:160px;max-width:100%;border:1px dashed var(--card-border);border-radius:5px;padding:2px 4px;font-size:11px}
+.dm.deco{font-size:15px;text-decoration-color:var(--st);width:auto;display:inline-block}
+.dm.mcol{display:flex;flex-direction:column;align-items:flex-start;height:76px;border:1px dashed var(--card-border);border-radius:5px}
+.dm.mrow{display:flex;align-items:center;height:30px;border:1px dashed var(--card-border);border-radius:5px}
+.dm.mcol i,.dm.mrow i{padding:1px 6px}
+.dm.padw{display:flex;align-items:center;min-height:40px}
+.dm .hi.pad{padding:0;border-radius:3px;border:1px dashed var(--st);background:linear-gradient(var(--st),var(--st)) content-box,repeating-linear-gradient(45deg,color-mix(in srgb,var(--st) 45%,transparent) 0 2px,transparent 2px 5px) padding-box;display:inline-block}
+.dm.szw{display:flex;flex-direction:column;gap:2px}
+.dm.szw .stage{width:480px;height:44px;zoom:.27;overflow:hidden;border:2px dashed var(--text-3);background:repeating-linear-gradient(90deg,transparent 0 98px,color-mix(in srgb,var(--text-3) 60%,transparent) 98px 100px)}
+.dm.szw .bar{height:100%;background:color-mix(in srgb,var(--st) 55%,transparent);border:3px solid var(--st);padding:0;min-width:0;position:relative}
+.dm.szw .bar b{display:block;width:120px;height:100%;background:var(--st)}
+.dm.szw.h{flex-direction:row;align-items:flex-end;gap:6px}
+.dm.szw.h .stage{width:160px;height:240px;zoom:.25;background:repeating-linear-gradient(180deg,transparent 0 58px,color-mix(in srgb,var(--text-3) 60%,transparent) 58px 60px)}
+.dm.szw.h .bar{width:100%;height:auto}
+.dm.szw.h .bar b{width:100%;height:60px}
+.dm.szw .szl{font-size:11px;font-weight:700;color:var(--text)}
+.dm.bs{display:inline-block;width:auto;padding:4px 16px;border-radius:0;align-self:flex-start}
+.dm.ol{display:inline-block;width:auto;padding:4px 16px;border-radius:4px;background:color-mix(in srgb,var(--text-3) 30%,var(--card));margin:4px;align-self:flex-start;color:var(--text)}
+.dm.lite{background:#eceef2;border-radius:5px;display:flex;align-items:center;justify-content:center;min-height:52px;padding:8px}
+.dm.lite .sh{width:62px;height:28px;background:#fff;border-radius:5px;color:#444}
+.dm.lite .fimg{width:40px;height:40px;display:block}
+.dm.bdw{position:relative;height:50px;display:flex;gap:4px;overflow:hidden;border-radius:5px}
+.dm.bdw img{width:50px;height:50px}
+.dm.bdw .bdb{position:absolute;left:18%;right:18%;top:10px;bottom:10px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.5);border-radius:5px;color:#fff;font-size:11px;display:grid;place-items:center;text-shadow:0 1px 2px #000}
+.dm.xf{position:relative;height:52px;display:flex;align-items:center;justify-content:center}
+.dm.xf .ghost,.dm.xf .xb{padding:4px 10px;font-size:12px;font-weight:700;border-radius:4px}
+.dm.xf .ghost{position:absolute;border:1px dashed var(--text-3);color:transparent}
+.pv .slow{position:absolute;right:32px;top:6px;font-size:9.5px;color:var(--text-3)}
+.dm.rsz{width:110px;height:40px;border:1px solid var(--st);border-radius:4px;padding:2px 4px;font-size:10.5px}
+.tile .tsame{font-size:10.5px;color:var(--text-3);line-height:1.3}
+.tile .tcode{max-height:5.8em;overflow:auto}
+
+/* ── 組合卡：以寬為主。格子多的卡片先占滿一整排，格子少的並排 ── */
+.grid.famgrid{display:flex;flex-wrap:wrap;gap:.8rem;grid-template-columns:none}
+.grid.famgrid>.card.fam{flex:1 1 calc(min(var(--n,3),5) * 230px);min-width:min(100%,300px);max-width:100%}
+.tiles,.tiles.sw{grid-template-columns:repeat(auto-fit,minmax(min(210px,100%),1fr))}
+.tile .codebox{margin-top:auto}
+.tile .codebox .code{max-height:3.4em;font-size:11px}
+.tile .codebox .code{white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}
+.dm.insf{position:relative;height:70px;margin:6px 8px;width:auto;border:1px dashed var(--text-3);border-radius:4px}
+.dm.insf .inl{position:absolute;right:4px;top:2px;font-size:9.5px;color:var(--text-3)}
+.dm.insf .insb{font-size:10.5px;padding:2px 6px}
+.codebox .code{position:relative}
+.dm .dsp .kid{font-weight:700;background:color-mix(in srgb,var(--badge-fg) 22%,transparent);padding:0 5px;border-radius:3px}
+.dm .dsp{padding:3px}
+.dm.bgd{display:block;color:var(--text);font-size:11px}
+.dm.placec{border:1px dashed var(--card-border);border-radius:5px;padding:3px;gap:3px;height:70px}
+.dm.placec.two{height:60px}
+.dm.persp{height:64px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--card-border);border-radius:5px}
+.dm.persp .pcard{padding:10px 18px;font-size:12px}
+.dm.dcap{font-size:11.5px;line-height:1.55;margin:0;width:170px;max-width:100%}
+.dm.dcap .dcl{color:var(--st);font-weight:900}
+.dm.stk{display:inline-block;width:auto;line-height:1.2;font-size:26px;font-weight:900;color:#fff}
+.dm.rfw{height:70px;display:flex;align-items:flex-start;padding-top:4px}
+.dm.rfw .rf{padding:6px 14px;font-size:13px}
+.dm.snap{display:flex;gap:6px;overflow-x:auto;width:170px;max-width:100%;border:1px dashed var(--card-border);border-radius:5px;padding:4px}
+.dm.snap i{flex:0 0 70%}
+.card .dm.snap{scrollbar-width:thin;scrollbar-color:var(--text-3) transparent}
+.dm.snap i{padding:10px 6px}
+.dm.crn{display:block;width:90px;height:44px;border-radius:16px;background:var(--st)}
+/* ── 對照清單卡 ── */
+.lcb{display:grid;grid-template-columns:minmax(220px,320px) 1fr;gap:.8rem;align-items:start}
+.lcl{display:flex;flex-direction:column;gap:.4rem;position:sticky;top:calc(var(--sticky-h,120px) + 8px)}
+.lcsel{font-size:11.5px;color:var(--text-2)}
+.lcsel b{font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;color:var(--st)}
+.lcr{display:grid;grid-auto-flow:column;grid-template-rows:repeat(var(--lcr,10),auto);grid-auto-columns:minmax(170px,1fr);gap:3px 8px;align-content:start}
+.lcrow{display:flex;align-items:center;gap:6px;padding:3px 6px;border:1px dashed color-mix(in srgb,var(--text-3) 35%,transparent);border-radius:5px;background:none;color:var(--text);font-size:11.5px;text-align:left;cursor:pointer;min-width:0;font-family:inherit}
+.lcrow:hover{border-style:solid;border-color:var(--card-hover,var(--text-3));background:color-mix(in srgb,var(--text-3) 10%,transparent)}
+.lcrow.on{border-style:solid;border-color:var(--st);background:color-mix(in srgb,var(--st) 14%,transparent)}
+.lcrow.match{outline:2px solid var(--k);outline-offset:-1px}
+.lcrow .sw{width:14px;height:14px;border-radius:3px;border:1px solid color-mix(in srgb,var(--text-3) 60%,transparent);flex:none;background-image:none}
+.lcrow .sw.none{visibility:hidden}
+.lcnm{font-family:"SF Mono","Cascadia Code","Fira Code",ui-monospace,monospace;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.lcv{color:var(--text-3);margin-left:auto;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:45%;flex:none}
+.lcnote{font-size:11.5px;color:var(--text-3);margin-top:.5rem}
+.card.lc .codebox .code{max-height:5.2em}
+@media (max-width:700px){.lcb{grid-template-columns:1fr}.lcl{position:static}.lcr{grid-auto-flow:row;grid-template-rows:none;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));max-height:340px;overflow-y:auto;border-top:1px dashed var(--card-border);padding-top:4px}}
+.card.lc .lcp .pv{min-height:70px;justify-content:center}
+.card.lc .lcp .pv .tx{font-size:20px;font-weight:700}
+.card.lc .lcp .pv .pvbox{font-size:15px;padding:8px 20px}
+/* 效能：畫面外的卡片先不畫 */
+.card.fam,.grid>.card{content-visibility:auto;contain-intrinsic-size:auto 320px}
+.dm.origrow{display:flex;align-items:center;gap:8px;width:auto;flex-wrap:wrap}
+.dm .orig{display:inline-flex;flex-direction:column;align-items:center;gap:1px;flex:none}
+.dm .orig img{width:34px;height:34px;display:block;border:1px solid var(--card-border)}
+.dm .orig small{font-size:9.5px;color:var(--text-3)}
+.dm.lite .orig small{color:#555}
+.dm .arr{color:var(--text-3);font-size:12px}
+.grid.famgrid>.card.fam.lc{flex:1 1 var(--lcw,700px);min-width:min(100%,360px)}
+.lcb{grid-template-columns:minmax(220px,320px) minmax(0,1fr)}
+/* hover 預覽：兩格固定左右並排，不換行 */

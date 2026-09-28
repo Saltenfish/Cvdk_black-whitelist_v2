@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CaveDuck 前端白名單查詢</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+.hero{padding:2.6rem 1.2rem 1.6rem;max-width:1100px;margin:0 auto}
+.hero h1{font-size:30px;font-weight:800;letter-spacing:.01em;line-height:1.25;display:flex;align-items:center;gap:.6rem}
+.hero h1 .ico{color:var(--ok);font-family:ui-monospace,monospace;font-size:24px}
+.hero p{margin-top:.6rem;color:var(--text-2);font-size:15px;max-width:640px}
+.hero .legend{margin-top:1rem;background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:.6rem .9rem;display:inline-flex;gap:1rem}
+.hero .legend span{font-size:13px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 1.2rem 4rem}
+.tier{margin-top:1.8rem}
+.tier h2{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);display:flex;align-items:center;gap:.7rem}
+.tier h2::after{content:"";flex:1;height:1px;background:var(--card-border)}
+.tier p{font-size:13px;color:var(--text-2);margin:.25rem 0 .8rem}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem}
+.tile{background:var(--card);border:1px solid var(--card-border);border-top:4px solid var(--c);border-radius:14px;padding:1.05rem 1.1rem;display:flex;flex-direction:column;gap:.5rem;transition:transform .18s,box-shadow .18s,border-color .18s}
+.tile:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--card-hover);border-top-color:var(--c)}
+.tile .ico{font-size:30px;line-height:1}
+.tile h3{font-size:18px;font-weight:700;display:flex;align-items:center;gap:.5rem}
+.tile h3 .ext{font-size:11px;font-weight:500;color:var(--info);background:var(--info-bg);border:1px solid var(--info-bd);border-radius:999px;padding:0 7px}
+.tile .d{font-size:13.5px;color:var(--text-2);line-height:1.6;flex:1}
+.tile .d code{background:var(--bg-3);border-radius:4px;padding:0 4px;font-size:12px}
+.tile .by{font-size:12px;color:var(--text-3)}
+.tile .pills{margin-top:.2rem}
+.tile.small{padding:.8rem .95rem;border-top-width:2px}
+.tile.small .ico{font-size:22px;filter:grayscale(1);opacity:.75}
+.tile.small h3{font-size:15px}
+.tile.small .d{font-size:12.5px}
+footer{max-width:1100px;margin:0 auto;padding:1rem 1.2rem 2rem;color:var(--text-3);font-size:12px}
+@media (max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:560px){.cards{grid-template-columns:1fr}.hero h1{font-size:24px}.hero{padding-top:1.6rem}}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1><span class="ico" style="color:var(--ok);font-family:ui-monospace,monospace">&lt;/&gt;</span> CaveDuck 前端白名單查詢</h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+
+<div class="hero">
+  <h1><span class="ico">◈</span> 這個標籤，能在 CaveDuck 使用嗎？</h1>
+  <p>查 HTML 標籤、CSS 屬性、Tailwind 類別、動畫效果、SVG 圖形和數學公式，在<strong>聊天室</strong>和<strong>角色介面</strong>到底能不能用。</p>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="wrap">
+  <div class="tier">
+    <h2>常用工具</h2>
+    <p>最常查的五頁。</p>
+    <div class="cards">
+      <a class="tile" href="markdown.html" style="--c:var(--accent-6)">
+        <div class="ico">📝</div><h3>Markdown</h3>
+        <div class="d">用 <code>#</code>、<code>-</code>、<code>|</code> 這些符號排標題、清單、表格。</div>
+        <div class="pills"><span class="pill both" id="n-md-both">—</span><span class="pill creator" id="n-md-creator">—</span></div>
+      </a>
+      <a class="tile" href="html-tags.html" style="--c:var(--ok)">
+        <div class="ico">🏷️</div><h3>HTML 標籤</h3>
+        <div class="d">想知道 <code>&lt;table&gt;</code>、<code>&lt;details&gt;</code> 這些標籤能不能貼進角色卡？按用途分好類，每個標籤都寫了它能做什麼。</div>
+        <div class="pills"><span class="pill both" id="n-tag-both">—</span><span class="pill chat" id="n-tag-chat">—</span><span class="pill creator" id="n-tag-creator">—</span></div>
+      </a>
+      <a class="tile" href="animate.html" style="--c:var(--accent-7)">
+        <div class="ico">✨</div><h3>動畫效果</h3>
+        <div class="d">想讓文字彈跳、閃爍、淡入淡出？這裡有全部 Animate.css 動畫，每個都有預覽，看中哪個直接複製。</div>
+        <div class="pills"><span class="pill both">兩邊都能用</span><span class="pill muted" id="n-anim">— 個動畫</span></div>
+      </a>
+      <a class="tile" href="tailwind.html" style="--c:var(--accent-1)">
+        <div class="ico">💠</div><h3>Tailwind 類別</h3>
+        <div class="d">不能用 style，那就改用 class 。把近 2000 個可用 class 分成「排版、間距、文字、顏色…」，找東西快很多。</div>
+        <div class="pills"><span class="pill both">兩邊都能用</span><span class="pill muted" id="n-tw">— 個類別</span></div>
+      </a>
+      <a class="tile" href="css-props.html" style="--c:var(--creator)">
+        <div class="ico">🎨</div><h3>CSS 屬性</h3>
+        <div class="d">在 <code>style=""</code> 裡可以寫什麼？按主題分好，顯示每個屬性的效果。</div>
+        <div class="pills"><span class="pill both">兩邊都能用</span><span class="pill muted" id="n-css-both">—</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <h2>小工具</h2>
+    <p>顯示在聊天訊息下方的狀態欄。</p>
+    <div class="cards">
+      <a class="tile" href="widget.html" style="--c:var(--accent-5)">
+        <div class="ico">🧩</div><h3>小工具</h3>
+        <div class="d">小工具（狀態欄）能寫哪些標籤和屬性、哪些會被刪掉。寫在小工具裡的規則和聊天室、角色介面都不一樣。</div>
+        <div class="pills"><span class="pill info">小工具限定</span><span class="pill muted">47 個標籤</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <h2>只有聊天室能用</h2>
+    <p>這兩種在角色介面會整段被刪掉，只在聊天室訊息裡有效。</p>
+    <div class="cards">
+      <a class="tile" href="svg.html" style="--c:var(--accent-3)">
+        <div class="ico">🔷</div><h3>SVG 圖形</h3>
+        <div class="d">畫圓、畫線、做漸層、加模糊或陰影特效。每個標籤都有圖可以看，還有「什麼時候會用到」。</div>
+        <div class="pills"><span class="pill chat">聊天室限定</span><span class="pill info" id="n-svg">—</span></div>
+      </a>
+      <a class="tile" href="mathml.html" style="--c:var(--accent-3)">
+        <div class="ico">∑</div><h3>數學公式</h3>
+        <div class="d">分數、根號、上下標、Σ 這些數學符號怎麼寫？用 MathML 標籤就能排出正規的公式。</div>
+        <div class="pills"><span class="pill chat">聊天室限定</span><span class="pill info" id="n-math">—</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <h2>合作夥伴工具</h2>
+    <p>由合作創作者製作、和這個站互補的查詢工具。</p>
+    <div class="cards">
+      <a class="tile" href="https://prysline.github.io/caveduck-class-reference/" target="_blank" rel="noopener" style="--c:var(--info)">
+        <div class="ico">🔍</div><h3>Caveduck Class Reference <span class="ext">外部連結 ↗</span></h3>
+        <div class="d">查 CaveDuck 平台<strong>內建</strong> class 的說明與即時預覽，可以用來取代 inline style；還有兩個 class 並排比較的模式。</div>
+        <div class="by">作者：Prysline 布啾</div>
+        <div class="pills"><span class="pill info">即時預覽</span><span class="pill muted">Compare 模式</span></div>
+      </a>
+    </div>
+  </div>
+
+</div>
+<footer>資料為實際貼入 CaveDuck 聊天室與角色介面測試的結果，平台更新後可能變動。</footer>
+
+<script src="data/markdown.js"></script>
+<script src="data/animate.js"></script>
+<script src="data/html-tags.js"></script>
+<script src="data/tailwind.js"></script>
+<script src="data/tailwind-hover.js"></script>
+<script src="data/tailwind-variants.js"></script>
+<script src="data/css-props.js"></script>
+<script src="data/svg.js"></script>
+<script src="data/mathml.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+document.getElementById('legend').innerHTML = CD.legend(['both','chat','creator']);
+function put(id, txt){ var e=document.getElementById(id); if(e) e.textContent=txt; }
+function cnt(items, st){ return items.filter(function(i){return i.status===st;}).length; }
+CD.loadJSON('data/markdown.json',true).then(function(d){ put('n-md-both', cnt(d.items,'both')+_t(' 兩邊都能用')); put('n-md-creator', cnt(d.items,'creator')+_t(' 只有角色介面')); }).catch(function(){});
+CD.loadJSON('data/animate.json',true).then(function(d){ var n=0; d.categories.forEach(function(c){n+=c.items.length;}); put('n-anim', n+_t(' 個動畫')); }).catch(function(){});
+CD.loadJSON('data/html-tags.json',true).then(function(d){ put('n-tag-both', cnt(d.items,'both')+_t(' 兩邊都能用')); put('n-tag-chat', cnt(d.items,'chat')+_t(' 只有聊天室')); put('n-tag-creator', cnt(d.items,'creator')+_t(' 只有角色介面')); }).catch(function(){});
+Promise.all([CD.loadJSON('data/tailwind.json',true),CD.loadJSON('data/tailwind-hover.json',true).catch(function(){return {items:[]};}),CD.loadJSON('data/tailwind-variants.json',true).catch(function(){return {variants:{}};})]).then(function(r){ var v=0; ['sm','md','lg','xl','max-lg','max-md','max-sm','light','dark','group-hover','active','first-letter'].forEach(function(k){ v+=((r[2].variants||{})[k]||[]).length; }); put('n-tw', (r[0].items.length+r[1].items.length+v)+_t(' 個類別')); }).catch(function(){});
+CD.loadJSON('data/css-props.json',true).then(function(d){ put('n-css-both', cnt(d.items,'both')+_t(' 個屬性')); }).catch(function(){});
+CD.loadJSON('data/svg.json',true).then(function(d){ put('n-svg', d.items.filter(function(i){return i.status!=='deny';}).length+_t(' 個標籤')); }).catch(function(){});
+CD.loadJSON('data/mathml.json',true).then(function(d){ put('n-math', d.items.filter(function(i){return i.status!=='deny';}).length+_t(' 個標籤')); }).catch(function(){});
+</script>
+</body>
+</html>

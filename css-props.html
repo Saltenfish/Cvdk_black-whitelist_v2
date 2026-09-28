@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CSS 屬性 — CaveDuck 白名單</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>.card .codebox .code{max-height:3.4em;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere}</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">🎨</span> CSS 屬性 <span style="font-size:12px;font-weight:400;color:var(--text-3)">style="" 裡可以寫什麼</span></h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋屬性或說明，例如「圓角」「陰影」「flex」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+</div>
+<div class="note" style="flex-direction:column;align-items:flex-start;gap:.35rem">
+  <span>⚠ 兩邊共同的限制：<code>position:fixed</code> 會被卡片／訊息框框住，效果等同 absolute；最前面和最後面元素的上下外距會被強制歸零；<code>animation</code> 只能用平台已有的動畫名稱（例如 bounce、fadeIn、pulse）。</span>
+  <span>⚠ 角色介面另外：創作者評論預設只顯示 600px 高，其餘要按「看更多」。聊天室沒有高度限制。</span>
+</div>
+<main class="main" id="main"><div class="empty">載入中…</div></main>
+
+<script src="data/css-props.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+CD.loadJSON('data/css-props.json').then(function (d) {
+  var byG = {};
+  d.items.forEach(function (it) { (byG[it.group] = byG[it.group] || []).push(it); });
+  var ORDER = ['both', 'unverified', 'chat'];
+  var html = '', sections = [];
+  // 依屬性決定用哪種示範元素
+  function pvKind(p, group) {
+    if (/^animation/.test(p)) return 'anim';
+    if (/^transition/.test(p)) return 'trans';
+    if (/^(counter-|page-break|will-change|break-|box-decoration|color-interpolation|lighting|flood|mask-type|alignment|baseline|dominant|clip-rule|image-orientation|shape-image|unicode-bidi|font-feature|font-kerning|font-language|font-synthesis|font-variant-(alternates|east|position)|transform-style)/.test(p)) return null;
+    if (/^(list-)/.test(p)) return 'list';
+    if (/^(border-collapse|border-spacing|caption-side|empty-cells|table-layout)$/.test(p)) return 'table';
+    if (/^column/.test(p)) return 'para';
+    if (/^grid/.test(p)) return 'grid';
+    if (/^(display|flex|justify|align-(items|content)|gap|row-gap|order|place)/.test(p)) return 'row';
+    if (/^(position|top|right|bottom|left|inset|z-index|float|clear|margin|visibility|overflow)/.test(p)) return 'frame';
+    if (group === 'text' || /^(color|font|text|letter|word|line|white-space|writing|tab-size|ruby|hyphen|overflow-wrap|vertical-align)/.test(p)) return 'text';
+    return 'box';
+  }
+  // 預覽 + 程式碼（兩者是同一個東西）。st 是要示範的 style，程式碼裡會標色
+  function pvFor(p, group, st, show) {
+    var T = { css: show || st };
+    if (CD.demoKind(p)) return CD.pv({ prop: p, style: st, target: T });
+    if (/^animation-(direction|fill-mode|timing-function|delay|duration|iteration-count)$/.test(p)) return CD.pv({ kind: 'anim', style: st, base: 'animation: slideOutRight 1.2s linear', target: T });
+    var k = pvKind(p, group);
+    if (!k) return CD.pv({ kind: 'none', style: st, target: T });
+    if (k === 'anim') return CD.pv({ kind: 'anim', style: st, base: p === 'animation-play-state' ? 'animation: spin 1.5s linear infinite' : '', target: T });
+    if (k === 'trans') return CD.pv({ kind: 'trans', style: st, target: T });
+    var base = '';
+    if (k === 'row' && !/display\s*:/.test(st)) base = 'display: flex';
+    return CD.pv({ kind: k, style: st, base: base, target: T });
+  }
+  function card(it) {
+    return '<div class="card bycat" data-status="' + it.status + '" data-search="' + CD.esc(it.prop + ' ' + it.desc) + '">'
+      + '<div class="head"><div class="name">' + CD.esc(it.prop) + '</div></div>'
+      + (it.desc ? '<div class="desc">' + CD.esc(it.desc) + '</div>' : '')
+      + (function (x) { return x.html + CD.codeBlock(x.code, x.key); })(pvFor(it.prop, it.group, it.example)) + '</div>';
+  }
+  function tile(name, short, x, search) {
+    return '<div class="tile" data-search="' + CD.esc(search) + '">' + x.html + '<div class="tname">' + CD.esc(name) + '</div>'
+      + (short ? '<div class="tdesc">' + CD.esc(short) + '</div>' : '') + CD.codeBlock(x.code, x.key) + '</div>';
+  }
+  function famCardHtml(title, count, unit, desc, tilesHtml, search) {
+    return '<div class="card fam bycat" style="--n:' + count + '" data-status="both" data-search="' + CD.esc(search) + '">'
+      + '<div class="head"><div class="name">' + CD.esc(title) + '</div><span class="famn">' + count + ' ' + unit + '</span></div>'
+      + (desc ? '<div class="desc">' + CD.esc(desc) + '</div>' : '') + '<div class="tiles">' + tilesHtml + '</div></div>';
+  }
+  // ── 方向不同的同一件事：上下左右、四個角、x/y ──
+  function famKey(p) {
+    if (/^(top|right|bottom|left|inset)$/.test(p)) return 'inset';
+    return p.replace(/-(top|bottom)-(left|right)(?=-radius$)/, '').replace(/-(top|right|bottom|left)(?=-|$)/, '').replace(/-(x|y)$/, '');
+  }
+  var DIR = [['top', _t('上')], ['right', _t('右')], ['bottom', _t('下')], ['left', _t('左')], ['-x', _t('左右')], ['-y', _t('上下')]];
+  function dirLabel(p, key) {
+    if (p === key) return _t('四邊一次寫');
+    var corner = /-(top|bottom)-(left|right)-/.exec(p); if (corner) return { 'top-left': _t('左上角'), 'top-right': _t('右上角'), 'bottom-left': _t('左下角'), 'bottom-right': _t('右下角') }[corner[1] + '-' + corner[2]];
+    for (var i = 0; i < DIR.length; i++) if (p.indexOf(DIR[i][0]) >= 0) return DIR[i][1] + (key === 'inset' ? '' : _t('邊'));
+    return '';
+  }
+  // ── 同一個屬性、不同的值並排比較 ──
+  var VALUES = {
+    'display': ['block', 'inline-block', 'flex', 'grid'], 'justify-content': ['flex-start', 'center', 'flex-end', 'space-between'],
+    'align-items': ['flex-start', 'center', 'flex-end', 'stretch'], 'flex-direction': ['row', 'column', 'row-reverse'], 'flex-wrap': ['nowrap', 'wrap'],
+    'text-align': ['left', 'center', 'right'], 'font-weight': ['300', '400', '700', '900'], 'font-style': ['normal', 'italic'],
+    'text-decoration-line': ['underline', 'line-through', 'overline'], 'text-decoration-style': ['solid', 'dashed', 'dotted', 'wavy'],
+    'text-transform': ['uppercase', 'lowercase', 'capitalize'], 'white-space': ['normal', 'nowrap', 'pre'], 'border-style': ['solid', 'dashed', 'dotted', 'double'],
+    'list-style-type': ['disc', 'circle', 'square', 'decimal'], 'writing-mode': ['horizontal-tb', 'vertical-rl'],
+    'float': ['left', 'right'], 'overflow': ['visible', 'hidden', 'auto'], 'mix-blend-mode': ['multiply', 'screen', 'difference'],
+    'animation-direction': ['normal', 'reverse', 'alternate'], 'animation-fill-mode': ['none', 'forwards'], 'animation-timing-function': ['linear', 'ease-in', 'ease-out'],
+    'transition-timing-function': ['linear', 'ease-in', 'ease-out', 'ease-in-out'],
+    'background-clip': ['border-box', 'padding-box', 'content-box', 'text'],
+    'background-repeat': ['repeat', 'no-repeat', 'repeat-x', 'space'], 'background-size': ['auto', '20px', 'contain', 'cover'],
+    'background-position': ['left top', 'center', 'right bottom'],
+    'background-origin': ['padding-box', 'border-box', 'content-box'],
+    'rotate': ['15deg', '90deg', '-45deg'], 'scale': ['0.8', '1.2', '1.5'], 'perspective': ['800px', '300px', '120px'],
+    'place-items': ['start', 'center', 'end'], 'place-content': ['start', 'center', 'space-between'], 'place-self': ['start', 'center', 'end'],
+    'zoom': ['0.7', '1', '1.5'], 'paint-order': ['normal', 'stroke'],
+    'background-blend-mode': ['normal', 'multiply', 'screen', 'difference'], 'corner-shape': ['round', 'bevel', 'scoop', 'notch', 'squircle'],
+    'scroll-snap-align': ['start', 'center'], 'scrollbar-width': ['auto', 'thin', 'none'], 'text-underline-offset': ['2px', '6px'], 'text-decoration-thickness': ['1px', '4px'],
+    'hyphens': ['manual', 'auto'],
+    'align-self': ['flex-start', 'center', 'flex-end', 'stretch'], 'align-content': ['flex-start', 'center', 'space-between'],
+    'word-break': ['normal', 'break-all', 'keep-all'], 'text-overflow': ['clip', 'ellipsis'], 'overflow-wrap': ['normal', 'anywhere'],
+    'grid-auto-flow': ['row', 'column'], 'object-fit': ['fill', 'contain', 'cover', 'none'], 'visibility': ['visible', 'hidden'],
+    'flex-grow': ['0', '1'], 'flex-shrink': ['1', '0'], 'order': ['-1', '0', '1'], 'vertical-align': ['top', 'middle', 'bottom', 'baseline'],
+    'clear': ['none', 'both']
+  };
+  // 示範的樣子都一樣、只換值的：用對照清單（一個預覽＋名稱列表）；行為差很多、要並排比較的：維持並排
+  var LISTV = { 'font-weight': 1, 'font-style': 1, 'text-decoration-line': 1, 'text-decoration-style': 1, 'text-transform': 1, 'border-style': 1,
+    'list-style-type': 1, 'mix-blend-mode': 1, 'background-blend-mode': 1, 'corner-shape': 1, 'animation-timing-function': 1, 'transition-timing-function': 1,
+    'rotate': 1, 'scale': 1, 'perspective': 1, 'zoom': 1, 'text-underline-offset': 1, 'text-decoration-thickness': 1, 'scrollbar-width': 1, 'vertical-align': 1 };
+  var LCN = 0;
+  function valueCard(it) {
+    var vals = VALUES[it.prop];
+    var extra = it.prop === 'animation-direction' || it.prop === 'animation-fill-mode' ? 'animation-iteration-count:2;' : '';
+    if (LISTV[it.prop]) {
+      return CD.listCard({ id: 'cl' + (++LCN), title: it.prop, desc: it.desc, famn: vals.length + _t(' 種值・名稱移上去或點一下換預覽'),
+        search: it.prop + ' ' + it.desc + ' ' + vals.join(' '),
+        rows: vals.map(function (v) { var show = it.prop + ': ' + v; return { name: v, val: '', make: function () { return pvFor(it.prop, it.group, extra + show, extra + show); }, search: it.prop + ' ' + v }; }) });
+    }
+    var tiles = vals.map(function (v) { var show = it.prop + ': ' + v; return tile(v, '', pvFor(it.prop, it.group, extra + show, extra + show), it.prop + ' ' + v); }).join('');
+    return famCardHtml(it.prop, vals.length, _t('種值'), it.desc, tiles, it.prop + ' ' + it.desc + ' ' + vals.join(' '));
+  }
+  function renderGroup(items) {
+    var groups = {}, order = [];
+    items.forEach(function (it) { var k = famKey(it.prop); if (!groups[k]) { groups[k] = []; order.push(k); } groups[k].push(it); });
+    var tileHtml = '', listHtml = '', singles = [];
+    function put(h) { if (h.indexOf('card fam lc') >= 0) listHtml += h; else tileHtml += h; }
+    order.forEach(function (k) {
+      var list = groups[k];
+      if (list.length > 1) {
+        // 方向不同的同一件事（上下左右、四個角）：示範一樣，只換方向 → 對照清單
+        var base = list.filter(function (i) { return i.prop === k; })[0];
+        list.sort(function (a, b) { return (a.prop === k ? -1 : b.prop === k ? 1 : 0); });
+        put(CD.listCard({ id: 'cl' + (++LCN), title: k === 'inset' ? 'top / right / bottom / left' : k + _t('（各方向）'), desc: base ? base.desc : list[0].desc,
+          famn: list.length + _t(' 個・名稱移上去或點一下換預覽'), search: list.map(function (i) { return i.prop + ' ' + i.desc; }).join(' '),
+          rows: list.map(function (it) { return { name: it.prop, val: dirLabel(it.prop, k), make: function () { return pvFor(it.prop, it.group, it.example); }, search: it.prop + ' ' + it.desc }; }) }));
+      } else if (VALUES[list[0].prop]) put(valueCard(list[0]));
+      else singles.push(list[0]);
+    });
+    // 順序：並排比較 → 單獨的屬性 → 對照清單
+    return (tileHtml ? '<div class="grid famgrid">' + tileHtml + '</div>' : '')
+      + (singles.length ? (tileHtml ? _t('<div class="single-h">單獨的屬性</div>') : '') + '<div class="grid">' + singles.map(card).join('') + '</div>' : '')
+      + (listHtml ? '<div class="grid famgrid lcgrid">' + listHtml + '</div>' : '');
+  }
+  d.groups.forEach(function (g) {
+    var items = (byG[g.id] || []).filter(function (i) { return i.desc; });
+    if (!items.length) return;
+    items.sort(function (a, b) { return a.prop.localeCompare(b.prop); });
+    var main = items.filter(function (i) { return !i.rare; }), rare = items.filter(function (i) { return i.rare; });
+    sections.push({ id: g.id, name: g.name, count: items.length, accent: g.accent });
+    html += '<section class="cat" id="cat-' + g.id + '" style="--c:var(--accent-' + g.accent + ')"><h2>' + CD.esc(g.name) + '<span class="n">' + items.length + '</span><span class="sub">' + CD.esc(g.hint || '') + '</span></h2>';
+    html += renderGroup(main);
+    if (rare.length) html += _t('<details class="rare"><summary>較少用的（') + rare.length + _t('）</summary><div class="grid">') + rare.map(card).join('') + '</div></details>';
+    html += '</section>';
+  });
+  // 不支援（只列名字）
+  var none = d.items.filter(function (i) { return !i.desc; }).map(function (i) { return { n: i.prop }; });
+  if (none.length) {
+    sections.push({ id: 'none', name: _t('寫了也沒效果'), count: none.length, color: 'var(--no)' });
+    html += _t('<section class="cat" id="cat-none" data-status="none" style="--c:var(--no)"><h2>寫了也沒效果<span class="n">') + none.length + _t('</span><span class="sub">平台不會刪掉，但瀏覽器根本不認得這些名字（多半是從沒實作的草案），寫了沒有任何作用</span></h2>') + CD.chipList(none, 'n') + '</section>';
+  }
+  html += _t('<div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+    CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+  CD.initMotion();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>小工具 — CaveDuck 白名單</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+/* 預覽照平台的樣子：標題、清單、引用的預設樣式都被清掉（依平台樣式表） */
+.wpv{position:relative;overflow:hidden;font-size:14px;line-height:normal;letter-spacing:normal;padding:.55rem .7rem .55rem 1.4rem}
+.wpv *{margin:0;padding:0}
+.wpv h1,.wpv h2,.wpv h3,.wpv h4,.wpv h5,.wpv h6{font-size:inherit;font-weight:inherit}
+.wpv ul{list-style:disc}.wpv ol{list-style:decimal}
+.wpv blockquote,.wpv dd,.wpv figure{margin:0}
+.wpv table{border-collapse:collapse;text-indent:0}
+.wpv th{font-weight:700;text-align:left}
+.wpv b,.wpv strong{font-weight:bolder}
+.wpv small{font-size:80%}
+.wpv sub,.wpv sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}.wpv sub{bottom:-.25em}.wpv sup{top:-.5em}
+.wpv mark{background:#ff0;color:#000}
+.wpv hr{height:0;border:0;border-top:1px solid currentColor;color:inherit}
+.wpv code,.wpv pre{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:1em}
+.wpv pre{white-space:pre}
+.wpv summary{display:list-item;cursor:pointer}
+.tagnames{display:flex;flex-wrap:wrap;gap:4px}
+.tagnames code{font-size:12.5px;font-weight:700;color:var(--c);background:color-mix(in srgb,var(--c) 12%,transparent);border:1px solid color-mix(in srgb,var(--c) 35%,transparent);border-radius:5px;padding:1px 7px}
+.links{display:flex;gap:6px;flex-wrap:wrap}
+.links a{font-size:12px;padding:1px 9px;border-radius:999px;border:1px solid var(--card-border);color:var(--text-2);text-decoration:none}
+.links a:hover{color:var(--text);border-color:var(--c)}
+.subh{font-size:13px;color:var(--text-2);margin:.8rem 0 .4rem;font-weight:700}
+.note code{font-size:12px}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">🧩</span> 小工具</h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋標籤或說明，例如「表格」「details」「url」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+</div>
+<div class="note" style="flex-direction:column;align-items:flex-start;gap:.35rem">
+  <span>小工具顯示在聊天訊息的下方。只留下面列的 47 個標籤和 <code>class</code>、<code>style</code> 兩個屬性，其他都會被刪掉。</span>
+  <span><code>{{狀態值名稱}}</code> 會換成狀態值；值裡寫的 HTML 會原樣顯示成文字，換行會變成換行。<code>{{char}}</code>、<code>{{user}}</code> 會換成角色名字和使用者名字。</span>
+  <span>Markdown 符號不會轉換。內容上限 10000 字。</span>
+</div>
+<main class="main" id="main"><div class="empty">載入中…</div></main>
+
+<script src="data/widget.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+CD.loadJSON('data/widget.json').then(function (d) {
+  var html = '', sections = [];
+  // 可以用的標籤
+  d.groups.forEach(function (g) {
+    var list = d.tags.filter(function (t) { return t.g === g.id; }); if (!list.length) return;
+    var n = list.reduce(function (s, t) { return s + t.tags.length; }, 0);
+    sections.push({ id: g.id, name: g.name, count: n, accent: g.accent });
+    html += '<section class="cat" id="cat-' + g.id + '" style="--c:var(--accent-' + g.accent + ')"><h2>' + CD.esc(g.name) + '<span class="n">' + n + '</span></h2><div class="grid">';
+    list.forEach(function (t) {
+      html += '<div class="card bycat" data-status="both" data-search="' + CD.esc(t.tags.join(' ') + ' ' + t.desc) + '">'
+        + '<div class="head"><div class="tagnames">' + t.tags.map(function (x) { return '<code>&lt;' + x + '&gt;</code>'; }).join('') + '</div></div>'
+        + '<div class="desc">' + CD.esc(t.desc) + '</div>'
+        + '<div class="preview wpv">' + t.ex + '</div>'
+        + CD.codeBlock(t.ex.replace(/\n/g, '\n'), { tag: t.tags }) + '</div>';
+    });
+    html += '</div></section>';
+  });
+  // 可以用的屬性
+  sections.push({ id: 'attrs', name: _t('可以用的屬性'), count: d.attrs.length, accent: 3 });
+  html += _t('<section class="cat" id="cat-attrs" style="--c:var(--accent-3)"><h2>可以用的屬性<span class="n">') + d.attrs.length + _t('</span><span class="sub">其他屬性全部刪掉</span></h2><div class="grid">');
+  d.attrs.forEach(function (a) {
+    html += '<div class="card bycat" data-status="both" data-search="' + CD.esc(a.name + ' ' + a.desc) + '">'
+      + '<div class="head"><div class="tagnames"><code>' + a.name + '</code></div></div>'
+      + '<div class="desc">' + CD.esc(a.desc) + '</div>'
+      + '<div class="links">' + a.links.map(function (l) { return '<a href="' + l[1] + '">' + CD.esc(l[0]) + ' →</a>'; }).join('') + '</div>'
+      + CD.codeBlock(a.ex, { word: a.name }) + '</div>';
+  });
+  html += '</div></section>';
+  // 會被刪掉的
+  var nb = d.blockedTags.length + d.blockedAttrs.length + d.blockedCss.length;
+  sections.push({ id: 'none', name: _t('會被刪掉的'), count: nb, color: 'var(--no)' });
+  html += _t('<section class="cat" id="cat-none" data-status="none" style="--c:var(--no)"><h2>會被刪掉的<span class="n">') + nb + _t('</span><span class="sub">寫了會整個被刪掉</span></h2>')
+    + _t('<div class="subh">標籤（不在上面清單裡的都會刪，這裡列常見的）</div>') + CD.chipList(d.blockedTags.map(function (x) { return { n: '<' + x[0] + '>', r: x[1] }; }), 'n', 'r')
+    + _t('<div class="subh">屬性（class、style 以外全部刪掉，這裡列常見的）</div>') + CD.chipList(d.blockedAttrs.map(function (x) { return { n: x[0], r: x[1] }; }), 'n', 'r')
+    + _t('<div class="subh">style 裡會被刪掉的寫法</div>') + CD.chipList(d.blockedCss.map(function (x) { return { n: x[0], r: x[1] }; }), 'n', 'r')
+    + '</section>';
+  html += _t('<div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+  CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+});
+</script>
+</body>
+</html>

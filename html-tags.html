@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HTML 標籤 — CaveDuck 白名單</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+.preview h1,.preview h2,.preview h3,.preview h4,.preview h5,.preview h6{margin:.2em 0;line-height:1.3}
+.preview table{border-collapse:collapse}.preview th,.preview td{border:1px solid var(--card-border);padding:2px 8px}
+.preview ul,.preview ol{padding-left:1.4em}.preview dd{margin-left:1.2em}
+.preview blockquote{border-left:3px solid var(--card-border);padding-left:.6em;color:var(--text-2)}
+.preview hr{border:none;border-top:1px solid var(--card-border);margin:.4em 0}
+.preview img{max-width:100%}.preview pre{white-space:pre-wrap}
+.preview a{color:var(--creator);text-decoration:underline}
+.preview mark{background:#ffe84d;color:#222}
+/* <dialog open> 預設會浮在整個頁面正中央，預覽時把它關在卡片裡 */
+.preview dialog{position:static;display:block;margin:0;inset:auto;max-width:100%;padding:.4em .7em;border:1px solid var(--card-border);border-radius:6px;background:var(--card);color:var(--text);box-shadow:var(--shadow)}
+.preview{position:relative;overflow:hidden}
+.mdlink{align-self:flex-start;font-size:12px;padding:1px 9px;border-radius:999px;border:1px solid var(--creator-bd);background:var(--creator-bg);color:var(--creator);text-decoration:none}
+.mdlink:hover{text-decoration:underline}
+.mdlink.no{border-color:var(--no-bd);background:var(--no-bg);color:var(--no)}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">🏷️</span> HTML 標籤</h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋標籤或說明，例如「表格」「粗體」「details」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+  <div class="row"><span class="lbl">狀態</span>
+    <div class="seg" id="seg">
+      <button class="on" data-s="all">全部</button>
+      <button data-s="both"><i class="sw both"></i>兩邊都能用</button>
+      <button data-s="chat"><i class="sw chat"></i>只有聊天室</button>
+      <button data-s="creator"><i class="sw creator"></i>只有角色介面</button>
+    </div>
+  </div>
+</div>
+<div class="note">
+  <span><strong>聊天室</strong>幾乎所有標籤都能用（只禁 a、img、style）；<strong>角色介面</strong>直接寫 HTML 只留 11 個，但標題、清單、表格等可以改用 <strong>Markdown</strong> 寫（卡片上有「📝」標記，點了會跳到 <a href="markdown.html" style="color:var(--creator);text-decoration:underline">Markdown 頁</a>）。聊天室保留 data-* 設定，角色介面會刪掉；style 兩邊都完整保留。YouTube 的 iframe 是例外（見 iframe 卡片）。</span>
+  <span id="legend"></span>
+</div>
+<main class="main" id="main"><div class="empty">載入中…</div></main>
+
+<script src="data/html-tags.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+document.getElementById('legend').innerHTML = CD.legend(['both','chat','creator','none']);
+CD.loadJSON('data/html-tags.json').then(function (d) {
+  var groups = d.groups, byG = {};
+  d.items.forEach(function (it) { (byG[it.group] = byG[it.group] || []).push(it); });
+  var order = { both: 0, creator: 1, chat: 2, none: 3 };
+  var html = '', sections = [];
+  groups.forEach(function (g) {
+    var items = byG[g.id] || []; if (!items.length) return;
+    var accent = g.accent || 0;
+    var cvar = accent ? 'var(--accent-' + accent + ')' : 'var(--text-3)';
+    sections.push({ id: g.id, name: g.name, count: items.length, accent: accent, color: accent ? null : (g.id === 'none' ? 'var(--no)' : 'var(--text-3)') });
+    html += '<section class="cat" id="cat-' + g.id + '" data-status="' + (g.id === 'none' ? 'none' : '') + '" style="--c:' + (g.id === 'none' ? 'var(--no)' : cvar) + '"><h2>' + CD.esc(g.name) + '<span class="n">' + items.length + '</span><span class="sub">' + CD.esc(g.hint || '') + '</span></h2>';
+    if (g.id === 'none') {
+      html += _t('<p class="sub" style="margin-bottom:.5rem">這些貼進去會被整個刪掉，不用花時間試。</p>') + CD.chipList(items.map(function (i) { return { n: '<' + i.tag + '>', r: i.reason }; }), 'n', 'r');
+    } else {
+      items.sort(function (a, b) { return a.tag.localeCompare(b.tag); });
+      html += CD.statusGroups(items, ['both', 'creator', 'chat'], function (it) {
+        return '<div class="card" data-status="' + it.status + '" data-search="' + CD.esc(it.tag + ' ' + it.desc) + '">'
+          + '<div class="head"><div class="name">&lt;' + CD.esc(it.tag) + '&gt;</div>' + CD.statusBadge(it.status) + '</div>'
+          + '<div class="desc">' + CD.esc(it.desc) + '</div>'
+          + (it.attrs.length ? _t('<div class="chips"><span class="lbl">常用設定</span>') + it.attrs.map(function (a) { return '<span class="chip">' + CD.esc(a) + '</span>'; }).join('') + '</div>' : '')
+          + (it.md ? '<a class="mdlink' + (it.md === 'quote' ? ' no' : '') + '" href="markdown.html#md-' + it.md + '">📝 ' + (it.md === 'quote' ? _t('Markdown 引用無效') : _t('也可以用 Markdown 寫')) + ' →</a>' : '')
+          + (it.preview ? '<div class="preview">' + it.preview + '</div>' : '')
+          + CD.codeBlock(it.example, { tag: it.tag }) + '</div>';
+      });
+    }
+    html += '</section>';
+  });
+  html += _t('<div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+  CD.bindStatusFilter(document.getElementById('seg'));
+  CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+});
+</script>
+</body>
+</html>

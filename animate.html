@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>動畫效果 — CaveDuck 白名單</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+.preview.anim{min-height:58px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.preview.anim span{display:inline-block;font-weight:800;font-size:15px;letter-spacing:1px;color:var(--c)}
+.util .card .name{font-size:13.5px}
+.subcat{margin-bottom:1rem}
+.subcat h3{font-size:13px;color:var(--text-2);margin:.4rem 0 .5rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">✨</span> 動畫效果 <span class="sub" style="font-size:12px;font-weight:400;color:var(--text-3)">Animate.css 4.1.1</span></h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋動畫名稱或說明，例如「淡入」「shake」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+</div>
+<div class="note">
+  <span><strong>怎麼用：</strong>把想動的文字包在 <code>&lt;span class="animate__animated animate__動畫名"&gt;</code> 裡。兩邊都能用（聊天室已實測 class 寫法，角色介面已實測 style 寫法）。也可以寫在 style 裡：<code>style="animation: bounce 1s infinite"</code>。</span>
+  <span>想要一直播、變快變慢、晚點開始，看最下面的「調整動畫的方式」。</span>
+</div>
+<main class="main" id="main"><div class="empty">載入中…</div></main>
+
+<script src="data/animate.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+CD.loadJSON('data/animate.json').then(function (d) {
+  var html = '', sections = [];
+  d.categories.forEach(function (c) {
+    sections.push({ id: c.id, name: c.name, count: c.items.length, accent: c.accent });
+    html += '<section class="cat" id="cat-' + c.id + '" style="--c:var(--accent-' + c.accent + ');--cbg:var(--accent-' + c.accent + '-bg)"><h2>' + CD.esc(c.name) + ' <span class="sub">' + CD.esc(c.en) + '</span><span class="n">' + c.items.length + '</span></h2><div class="grid">';
+    c.items.forEach(function (it) {
+      var full = 'animate__animated animate__' + it.cls + (it.extra ? ' ' + it.extra : '');
+      var code = '<span class="animate__animated animate__' + it.cls + '">' + it.sample + '</span>';
+      html += '<div class="card bycat" data-status="both" data-search="' + CD.esc(it.cls + ' ' + it.name + ' ' + it.desc) + '">'
+        + '<div class="head"><div class="name">' + CD.esc(it.cls) + '<span class="zh">' + CD.esc(it.name) + '</span></div></div>'
+        + '<div class="desc">' + CD.esc(it.desc) + '</div>'
+        + '<div class="preview anim tinted"><span class="' + full + '">' + CD.esc(it.sample) + '</span></div>'
+        + CD.codeBlock(code, { word: 'animate__' + it.cls }) + '</div>';
+    });
+    html += '</div></section>';
+  });
+  // 工具類別
+  sections.push({ id: 'util', name: _t('調整動畫的方式'), count: d.utilities.reduce(function (n, g) { return n + g.items.length; }, 0), color: 'var(--text-2)' });
+  html += _t('<section class="cat util" id="cat-util" style="--c:var(--text-2)"><h2>調整動畫的方式 <span class="sub">和動畫名稱一起加上去就有效</span></h2>');
+  d.utilities.forEach(function (g) {
+    html += '<div class="subcat"><h3>' + CD.esc(g.group) + '</h3><div class="grid">';
+    g.items.forEach(function (u) {
+      html += '<div class="card bycat" data-status="both" data-search="' + CD.esc(u.cls + ' ' + u.name + ' ' + u.desc) + '">'
+        + '<div class="head"><div class="name">' + CD.esc(u.cls) + '<span class="zh">' + CD.esc(u.name) + '</span></div></div>'
+        + '<div class="desc">' + CD.esc(u.desc) + '</div>' + CD.codeBlock(u.cls === 'animate__animated' ? _t('<span class="animate__animated animate__bounce">文字</span>') : '<span class="animate__animated animate__bounce ' + u.cls + _t('">文字</span>'), { word: u.cls }) + '</div>';
+    });
+    html += '</div></div>';
+  });
+  html += _t('</section><div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+  CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+});
+</script>
+</body>
+</html>

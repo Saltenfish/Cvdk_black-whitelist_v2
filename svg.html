@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SVG 圖形 — CaveDuck 白名單</title>
+<link rel="stylesheet" href="assets/theme.css">
+<script src="assets/i18n.js"></script>
+<style>
+.preview.fig{display:flex;align-items:center;justify-content:center;min-height:76px}
+.preview.fig svg{max-width:100%;height:auto}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="index.html">← 回首頁</a>
+  <h1><span class="ico">🔷</span> SVG 圖形</h1>
+  <button class="theme-btn" id="themeToggle" aria-label="切換主題"></button>
+</header>
+<div class="tools">
+  <div class="row">
+    <label class="search">🔍 <input id="q" type="search" placeholder="搜尋標籤或說明，例如「圓」「模糊」「漸層」"></label>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="row"><span class="lbl">分類</span><div class="catnav" id="catnav"></div></div>
+</div>
+<div class="note">
+  <span>SVG 是用程式碼「畫圖」的方式。<strong>只有聊天室能用</strong>，貼進角色介面會整段被刪掉。</span>
+  <span>所有圖形都要包在 <code>&lt;svg&gt;</code> 裡；漸層、濾鏡先放進 <code>&lt;defs&gt;</code>，再用 <code>fill="url(#名字)"</code> 或 <code>filter="url(#名字)"</code> 套用。</span>
+</div>
+<main class="main" id="main"><div class="empty">載入中…</div></main>
+
+<script src="data/svg.js"></script>
+<script src="assets/app.js"></script>
+<script>
+CD.initTheme();
+CD.loadJSON('data/svg.json').then(function (d) { renderFigPage(d, '<', '>'); });
+
+function renderFigPage(d, open, close) {
+  var byG = {};
+  d.items.forEach(function (it) { (byG[it.group] = byG[it.group] || []).push(it); });
+  var html = '', sections = [];
+  d.groups.forEach(function (g) {
+    var items = byG[g.id] || []; if (!items.length) return;
+    var isNone = g.id === 'none';
+    var c = isNone ? 'var(--no)' : (g.accent ? 'var(--accent-' + g.accent + ')' : 'var(--text-3)');
+    sections.push({ id: g.id, name: g.name, count: items.length, accent: isNone ? 0 : g.accent, color: isNone ? 'var(--no)' : null });
+    html += '<section class="cat" id="cat-' + g.id + '" data-status="' + (isNone ? 'none' : '') + '" style="--c:' + c + '"><h2>' + CD.esc(g.name) + '<span class="n">' + items.length + '</span><span class="sub">' + CD.esc(g.hint || '') + '</span></h2>';
+    if (isNone) {
+      html += CD.chipList(items.map(function (i) { return { n: open + (i.name || i.tag) + close, r: i.reason }; }), 'n', 'r');
+    } else {
+      html += '<div class="grid">';
+      items.forEach(function (it) {
+        html += '<div class="card bycat" data-status="' + (it.status === 'filter' ? 'filter' : 'allow') + '" data-search="' + CD.esc(it.tag + ' ' + (it.name || '') + ' ' + it.desc + ' ' + it.when) + '">'
+          + '<div class="head"><div class="name">' + CD.esc(open + (it.name || it.tag) + close) + '</div></div>'
+          + '<div class="desc">' + CD.esc(it.desc) + '</div>'
+          + (it.preview ? '<div class="preview fig">' + it.preview + '</div>' : '')
+          + CD.codeBlock(it.example, { tag: it.name || it.tag }) + '</div>';
+      });
+      html += '</div>';
+    }
+    html += '</section>';
+  });
+  html += _t('<div class="empty hidden" id="emptyMsg">沒有符合的項目</div>');
+  document.getElementById('main').innerHTML = html;
+  CD.buildCatNav(document.getElementById('catnav'), sections);
+  CD.bindSearch(document.getElementById('q'));
+  CD.apply();
+}
+</script>
+</body>
+</html>
