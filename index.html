@@ -22,7 +22,7 @@
 .tile:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--card-hover);border-top-color:var(--c)}
 .tile .ico{font-size:30px;line-height:1}
 .tile h3{font-size:18px;font-weight:700;display:flex;align-items:center;gap:.5rem}
-.tile h3 .ext{font-size:11px;font-weight:500;color:var(--info);background:var(--info-bg);border:1px solid var(--info-bd);border-radius:999px;padding:0 7px}
+.tile h3 .ext{font-size:11px;font-weight:500;color:var(--info);background:var(--info-bg);border:1px solid var(--info-bd);border-radius:999px;padding:0 7px;white-space:nowrap}
 .tile .d{font-size:13.5px;color:var(--text-2);line-height:1.6;flex:1}
 .tile .d code{background:var(--bg-3);border-radius:4px;padding:0 4px;font-size:12px}
 .tile .by{font-size:12px;color:var(--text-3)}
@@ -106,6 +106,18 @@ footer{max-width:1100px;margin:0 auto;padding:1rem 1.2rem 2rem;color:var(--text-
         <div class="ico">∑</div><h3>數學公式</h3>
         <div class="d">分數、根號、上下標、Σ 這些數學符號怎麼寫？用 MathML 標籤就能排出正規的公式。</div>
         <div class="pills"><span class="pill chat">聊天室限定</span><span class="pill info" id="n-math">—</span></div>
+      </a>
+    </div>
+  </div>
+
+  <div class="tier">
+    <h2>排版工具</h2>
+    <p>照這裡的規則，直接在網頁上排版。</p>
+    <div class="cards">
+      <a class="tile" href="https://saltenfish.github.io/Cvdk_layout_studio/" data-carry target="_blank" rel="noopener" style="--c:var(--accent-8)">
+        <div class="ico">🧱</div><h3><span>CaveDuck 排版室</span> <span class="ext">外部連結 ↗</span></h3>
+        <div class="d">在網頁上排版角色介面和小工具，照 CaveDuck 的規則即時預覽，做好直接複製程式碼。</div>
+        <div class="pills"><span class="pill info">即時預覽</span><span class="pill muted">角色介面・小工具</span></div>
       </a>
     </div>
   </div>
