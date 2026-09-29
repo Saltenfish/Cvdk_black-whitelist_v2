@@ -392,5 +392,10 @@ _t.add({
  "MathML 用標籤把公式「一塊一塊」組起來：數字放 <code>&lt;mn&gt;</code>、代號放 <code>&lt;mi&gt;</code>、符號放 <code>&lt;mo&gt;</code>，外面再包 <code>&lt;math&gt;</code>。": {"en": "MathML builds a formula piece by piece: numbers go in <code>&lt;mn&gt;</code>, letters in <code>&lt;mi&gt;</code>, symbols in <code>&lt;mo&gt;</code>, all wrapped in <code>&lt;math&gt;</code>.", "ko": "MathML은 태그로 공식을 한 조각씩 조립함: 숫자는 <code>&lt;mn&gt;</code>, 문자는 <code>&lt;mi&gt;</code>, 기호는 <code>&lt;mo&gt;</code>에 넣고, 전체를 <code>&lt;math&gt;</code>로 감싸기.", "ja": "MathML はタグで数式を「ひとつずつ」組み立てる：数字は <code>&lt;mn&gt;</code>、文字は <code>&lt;mi&gt;</code>、記号は <code>&lt;mo&gt;</code> に入れ、全体を <code>&lt;math&gt;</code> で囲む。"},
  "<strong>只有聊天室能用</strong>，角色介面不會顯示。": {"en": "<strong>Chat only</strong>. Not shown on the character page.", "ko": "<strong>채팅만</strong>. 캐릭터 페이지에서는 표시되지 않음.", "ja": "<strong>チャットのみ</strong>。キャラクターページには表示されない。"},
  "搜尋標籤或說明，例如「分數」「上標」「根號」": {"en": "Search tags or descriptions, e.g. “fraction”, “superscript”, “root”", "ko": "태그나 설명 검색, 예: “분수”, “위첨자”, “루트”", "ja": "タグや説明を検索、例：「分数」「上付き」「ルート」"},
- "數學公式 — CaveDuck 白名單": {"en": "Math formulas — CaveDuck Whitelist", "ko": "수학 공식 — CaveDuck 화이트리스트", "ja": "数式 — CaveDuck ホワイトリスト"}
+ "數學公式 — CaveDuck 白名單": {"en": "Math formulas — CaveDuck Whitelist", "ko": "수학 공식 — CaveDuck 화이트리스트", "ja": "数式 — CaveDuck ホワイトリスト"},
+ "排版工具": {"en": "Layout tools", "ko": "레이아웃 도구", "ja": "レイアウトツール"},
+ "照這裡的規則，直接在網頁上排版。": {"en": "Lay out pages in the browser, following the rules on this site.", "ko": "이 사이트의 규칙대로 웹에서 바로 레이아웃.", "ja": "このサイトのルールどおりに、ブラウザ上で直接レイアウト。"},
+ "CaveDuck 排版室": {"en": "CaveDuck Layout Studio", "ko": "CaveDuck 레이아웃 스튜디오", "ja": "CaveDuck レイアウトスタジオ"},
+ "在網頁上排版角色介面和小工具，照 CaveDuck 的規則即時預覽，做好直接複製程式碼。": {"en": "Lay out character pages and widgets in the browser with a live preview that follows CaveDuck's rules, then copy the code.", "ko": "웹에서 캐릭터 페이지와 위젯을 레이아웃하고, CaveDuck 규칙대로 실시간 미리보기. 완성되면 코드를 바로 복사.", "ja": "キャラクターページとウィジェットをブラウザ上でレイアウトし、CaveDuck のルールどおりにリアルタイムでプレビュー。できたらコードをそのままコピー。"},
+ "角色介面・小工具": {"en": "Character page · Widget", "ko": "캐릭터 페이지 · 위젯", "ja": "キャラクターページ・ウィジェット"}
 });

@@ -636,5 +636,14 @@ window.CD = (function () {
   return { fitLists: fitLists, listCard: listCard, lcSel: lcSel, lcPeek: lcPeek, lcBack: lcBack, focusKeys: focusKeys, pv: pv, remPx: remPx, demo: demo, demoKind: demoKind, copyBtn: copyBtn, animPreview: animPreview, transPreview: transPreview, replay: replay, initMotion: initMotion, mapAnim: mapAnim, stylePreview: stylePreview, initTheme: initTheme, loadJSON: loadJSON, esc: esc, hl: hl, copy: copy, codeBlock: codeBlock, reg: reg, buildCatNav: buildCatNav, alignCards: alignCards, bindStatusFilter: bindStatusFilter, bindSearch: bindSearch, apply: apply, statusPill: statusPill, statusBadge: statusBadge, statusGroups: statusGroups, legend: legend, chipList: chipList, moreButton: moreButton, STATUS_NAME: STATUS_NAME, state: state };
 })();
 
+// 連到其他站（加了 data-carry 的連結）：把目前的語言和深淺設定帶過去（?lang=…&theme=…）
+['mousedown', 'click', 'keydown'].forEach(function (ev) { document.addEventListener(ev, function (e) {
+  var a = e.target.closest && e.target.closest('a[data-carry]'); if (!a) return;
+  var u = new URL(a.getAttribute('href'), location.href);
+  u.searchParams.set('lang', (window._t && _t.lang) || 'zh');
+  u.searchParams.set('theme', document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark');
+  a.href = u.toString();
+}, true); });
+
 // 頁面上寫死的中文換成目前語言（在各頁自己的程式之前執行）
 if (window._t && _t.page) _t.page(document.body);
